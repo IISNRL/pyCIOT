@@ -20,11 +20,11 @@ Data Sources
 
 """
 
-import pyCIOT.data.air as air
-import pyCIOT.data.water as water
-import pyCIOT.data.weather as weather
-import pyCIOT.data.disaster as disaster
-import pyCIOT.data.quake as quake
-import pyCIOT.data.cctv as cctv
+from pyCIOT.data.air import AIR
+# import pyCIOT.data.water as water
+# import pyCIOT.data.weather as weather
+# import pyCIOT.data.disaster as disaster
+# import pyCIOT.data.quake as quake
+# import pyCIOT.data.cctv as cctv
 
 __all__ = [s for s in dir() if not s.startswith('_')]
