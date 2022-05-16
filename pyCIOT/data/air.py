@@ -71,11 +71,16 @@ class AIR:
         # Add filter parameters
         filters = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
         for target, value, op in filters:
+            # Name doesn't exist in Location or its expansion
+            # TODO: Find another way to keep those filters
+            if target == "name":
+                continue
+
             url.add_filter(target, value, op)
 
         if stationID:
             url.add_filter("Thing/properties/stationID", stationID, "eq")
 
-        # TODO: Get rid of multiple locations
+        # TODO: Combine multiple locations or use `Thing` as main key
         crawler = Crawler()
         return crawler.get(url.get_location())

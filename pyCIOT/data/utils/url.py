@@ -4,6 +4,9 @@ from os import path
 class URL:
     def __init__(self, base_url):
         self.base_url = base_url
+
+        # TODO: Construct expansions and filters with a `Class` so that
+        # it would be easier to be used. Now use string as workaround.
         self.expands = []
         self.filters = []
 
