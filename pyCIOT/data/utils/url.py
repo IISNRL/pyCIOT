@@ -131,14 +131,10 @@ class Expand:
         filter: Filter = None,
     ):
         self.__name = name
-        self.__select = select
-        self.__order_by = order_by
-        self.__pagination = pagination
-        self.__filter = filter
-
-        if self.__pagination:
-            # In a expand query, delimiter will be `;`, not `&`
-            self.__pagination.set_delimiter(";")
+        self.set_select(select)
+        self.set_order_by(order_by)
+        self.set_pagination(pagination)
+        self.set_filter(filter)
 
     def __repr__(self):
         inline_queries = [
@@ -165,6 +161,8 @@ class Expand:
 
     def set_pagination(self, pagination: Pagination):
         self.__pagination = pagination
+        # In a expand query, delimiter will be `;`, not `&`
+        self.__pagination.set_delimiter(";")
         return self
 
     def set_filter(self, filter: Filter):
