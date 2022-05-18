@@ -1,8 +1,6 @@
 from __future__ import annotations
-import datetime
-from typing import Any
 from os import path
-import re
+from .op import OP
 
 
 class Select:
@@ -10,10 +8,8 @@ class Select:
     Class for `$select`
     """
 
-    def __init__(self, fields: list[str] = None):
-        self.__fields = []
-        for field in fields:
-            self.set_field(field)
+    def __init__(self, fields: list[str] = []):
+        self.__fields = fields
 
     def __repr__(self):
         if len(self.__fields):
@@ -37,10 +33,8 @@ class OrderBy:
     Class for `$orderby`
     """
 
-    def __init__(self, fields: list[str] = None):
-        self.__fields = []
-        for field in fields:
-            self.set_field(field)
+    def __init__(self, fields: list[str] = []):
+        self.__fields = fields
 
     def __repr__(self):
         if len(self.__fields):
@@ -107,44 +101,20 @@ class Filter:
     Class for `$filter`
     """
 
-    def __init__(self):
-        self.__filters: list[list[str]] = []
-        self.__valid_ops = {"eq", "le", "ge", "lt", "gt", "substring"}
+    def __init__(self, filters: list[OP] = []):
+        self.__filters = filters
 
     def __repr__(self):
         if len(self.__filters):
-            return f"$filter=" + " and ".join(self.__get_queries())
+            return f"$filter=" + " and ".join(
+                map(lambda f: f.get_expression() for f in self.__filters)
+            )
         else:
             return None
 
-    def __get_queries(self):
-        for target, value, op in self.__filters:
-            if op == "substring":
-                yield self.__substring(target, value)
-            else:
-                yield self.__compare(target, value, op)
-
-    def __compare(self, target, value, op):
-        if isinstance(value, datetime.date):
-            return f"{target} {op} {value.isoformat()}"
-        elif isinstance(value, str) and not self.__validate_iso8601(value):
-            return f"{target} {op} '{value}'"
-        else:
-            return f"{target} {op} {value}"
-
-    def __substring(self, target, value):
-        return f"substringof('{value}',{target})"
-
-    def __validate_iso8601(self, str):
-        regex = r"^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$"
-        return re.compile(regex).match(str) is not None
-
-    def set_filter(self, target: str, value: Any, op: str):
-        # TODO: Refine code so that can remove filter from filters array
-        if op in self.__valid_ops:
-            self.filters.append([target, value, op])
-        else:
-            raise ValueError(f"Unsuppored operation: {op}")
+    def set_filter(self, filter: OP):
+        self.__filters.append(filter)
+        return self
 
 
 class Expand:
