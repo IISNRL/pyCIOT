@@ -44,47 +44,41 @@ class AIR:
         if src not in DATA_SOURCE[self.key]:
             raise Exception(f"Unknown source is provided, {src}")
 
-        expand_list = [
+        expands = Expands([
             Expand("Thing"),
             Expand("Observations", orderby=OrderBy(["phenomenonTime"]), pagination=Pagination())
-        ]
+        ])
         if timestamp:
             # TODO: Check timestamp format
-            expand_list[1].set_filter(Filter([LE("phenomenonTime", timestamp)]))
+            expands.get_expand("Observations").set_filter(Filter([LE("phenomenonTime", timestamp)]))
 
         filter = Filter()
         f = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
         if f:
+            # TODO: Deal with damn filter in proper way
             filter.set_filter(EQ(f[0][0], f[0][1])).set_filter(EQ(f[1][0], f[1][1]))
             filter.set_filter(SUBSTRING(f[2][0], f[2][1]))
 
         if stationID:
             filter.set_filter(EQ("Thing/properties/stationID", stationID))
 
-        url = UrlBuilder(DATA_SOURCE[self.key][src], expands=Expands(expand_list), filter=filter)
+        url = UrlBuilder(DATA_SOURCE[self.key][src], expands=expands, filter=filter)
         return Crawler().get(url.get_datastream())
 
     def get_station(self, src: str, stationID: str = None) -> 'list[Any]':
         if src not in DATA_SOURCE[self.key]:
             raise Exception(f"Unknown source is provided, {src}")
 
-        url = URL(DATA_SOURCE[self.key][src])
-        # Add expand parameters
-        url.add_expand("Things")
+        expands = Expands([Expand("Things")])
 
-        # Add filter parameters
-        filters = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
-        for target, value, op in filters:
-            # Name doesn't exist in Location or its expansion
-            # TODO: Find another way to keep those filters
-            if target == "name":
-                continue
-
-            url.add_filter(target, value, op)
+        filter = Filter()
+        f = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
+        if f:
+            # TODO: Deal with damn filter in proper way
+            filter.set_filter(EQ(f[1][0], f[1][1])).set_filter(SUBSTRING(f[2][0], f[2][1]))
 
         if stationID:
-            url.add_filter("Thing/properties/stationID", stationID, "eq")
+            filter.set_filter(EQ("Thing/properties/stationID", stationID))
 
-        # TODO: Combine multiple locations or use `Thing` as main key
-        crawler = Crawler()
-        return crawler.get(url.get_location())
+        url = UrlBuilder(DATA_SOURCE[self.key][src], expands=expands, filter=filter)
+        return Crawler().get(url.get_location())

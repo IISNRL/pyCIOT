@@ -158,6 +158,9 @@ class Expand:
         else:
             return self.__name
 
+    def get_name(self):
+        return self.__name
+
     def set_select(self, select: Select):
         self.__select = select
         return self
@@ -189,6 +192,14 @@ class Expands():
 
     def add_expand(self, expand: Expand):
         self.__expands.append(expand)
+        return self
+
+    def get_expand(self, name: str) -> Expand:
+        for expand in self.__expands:
+            if expand.get_name() == name:
+                return expand
+
+        return None
 
 class UrlBuilder():
     """
@@ -249,86 +260,3 @@ class UrlBuilder():
     def set_pagination(self, pagination: Pagination):
         self._pagination = pagination
         return self
-
-
-
-class URL:
-    """
-    URL Builder
-    """
-
-
-    def __init__(
-        self,
-        base_url: str,
-        select: Select = None,
-        order_by: OrderBy = None,
-        pagination: Pagination = None,
-        filter: Filter = None,
-    ):
-        self.base_url = base_url
-        self.set_select(select)
-        self.set_order_by(order_by)
-        self.set_pagination(pagination)
-        self.set_filter(filter)
-
-    def add_expand(self, prop):
-        """
-        Add expand into URL builder
-        """
-        self.expands.append(self._escape(prop))
-
-    def add_filter(self, target: str, value: str, op: str):
-        """
-        Add a filter into URL builder
-
-        Parameters:
-        ----------
-        target
-            Search target
-        value
-            value to which value should match
-        op
-            eq, le, ge, lt, gt, substring
-
-        """
-        if op in {"eq", "le", "ge", "lt", "gt"}:
-            self.filters.append(f"{target} {op} '{value}'")
-        elif op == "substring":
-            self.filters.append(f"substringof('{value}',{target})")
-        else:
-            raise Exception("Unsuppored operation")
-
-    def get_datastream(self) -> str:
-        return path.join(self.base_url, "Datastreams?") + self._escape(
-            "&".join(self._get_query())
-        )
-
-    def get_location(self) -> str:
-        return path.join(self.base_url, "Locations?") + self._escape(
-            "&".join(self._get_query())
-        )
-
-    def _get_query(self):
-        return filter(
-            lambda x: x != None,
-            [self._get_expand(), self._get_filter(), self._get_count()],
-        )
-
-    def _get_expand(self):
-        if len(self.expands):
-            return f"$expand=" + ",".join(self.expands)
-        else:
-            return None
-
-    def _get_filter(self):
-        if len(self.filters):
-            return f"$filter=" + "%20and%20".join(self.filters)
-        else:
-            return None
-
-    def _get_count(self):
-        return f"$count=true"
-
-    def _escape(self, path):
-        return path.replace("'", "%27").replace(" ", "%20")
