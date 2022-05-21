@@ -1,6 +1,11 @@
 from .config import DATA_SOURCE
 from .utils.crawler import Crawler
-from .utils.url import URL
+from .utils.url import (
+    URL, UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
+)
+from .utils.op import (
+    EQ, LE, SUBSTRING
+)
 
 from typing import Any, Optional
 import json
@@ -39,26 +44,25 @@ class AIR:
         if src not in DATA_SOURCE[self.key]:
             raise Exception(f"Unknown source is provided, {src}")
 
-        url = URL(DATA_SOURCE[self.key][src])
-        # Add expand parameters
-        url.add_expand("Thing")
+        expand_list = [
+            Expand("Thing"),
+            Expand("Observations", orderby=OrderBy(["phenomenonTime"]), pagination=Pagination())
+        ]
         if timestamp:
             # TODO: Check timestamp format
-            url.add_expand(
-                f"Observations($filter=phenomenonTime le ${timestamp};$orderby=phenomenonTime desc;$top=1)")
-        else:
-            url.add_expand("Observations($orderby=phenomenonTime desc;$top=1)")
+            expand_list[1].set_filter(Filter([LE("phenomenonTime", timestamp)]))
 
-        # Add filter parameters
-        filters = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
-        for target, value, op in filters:
-            url.add_filter(target, value, op)
+        filter = Filter()
+        f = json.loads(DATA_SOURCE[self.filter_key].get(src, "[]"))
+        if f:
+            filter.set_filter(EQ(f[0][0], f[0][1])).set_filter(EQ(f[1][0], f[1][1]))
+            filter.set_filter(SUBSTRING(f[2][0], f[2][1]))
 
         if stationID:
-            url.add_filter("Thing/properties/stationID", stationID, "eq")
+            filter.set_filter(EQ("Thing/properties/stationID", stationID))
 
-        crawler = Crawler()
-        return crawler.get(url.get_datastream())
+        url = UrlBuilder(DATA_SOURCE[self.key][src], expands=Expands(expand_list), filter=filter)
+        return Crawler().get(url.get_datastream())
 
     def get_station(self, src: str, stationID: str = None) -> 'list[Any]':
         if src not in DATA_SOURCE[self.key]:

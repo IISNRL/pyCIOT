@@ -140,7 +140,7 @@ class Expand:
     ):
         self.__name = name
         self.set_select(select)
-        self.set_order_by(orderby)
+        self.set_orderby(orderby)
         self.set_pagination(pagination)
         self.set_filter(filter)
 
@@ -162,7 +162,7 @@ class Expand:
         self.__select = select
         return self
 
-    def set_order_by(self, order_by: OrderBy):
+    def set_orderby(self, order_by: OrderBy):
         self.__order_by = order_by
         return self
 
@@ -179,13 +179,78 @@ class Expand:
 
 class Expands():
     def __init__(self, expands: list[Expand]=[]):
-        self.expands = list(expands)
+        self.__expands = list(expands)
 
     def __repr__(self):
-        if self.expands:
-            return f"$expand=" + ",".join([repr(expand) for expand in self.expands])
+        if self.__expands:
+            return f"$expand=" + ",".join([repr(expand) for expand in self.__expands])
         else:
             return ""
+
+    def add_expand(self, expand: Expand):
+        self.__expands.append(expand)
+
+class UrlBuilder():
+    """
+    URL Builder
+    """
+    def __init__(
+        self,
+        base_url: str,
+        expands: Expands = None,
+        filter: Filter = None,
+        select: Select = None,
+        orderby: OrderBy = None,
+        pagination: Pagination = None,
+    ):
+        self._base_url = base_url
+        self._expands = expands
+        self._filter = filter
+        self._select = select
+        self._orderby = orderby
+        self._pagination = pagination
+
+    def _count(self):
+        return "$count=true"
+
+    def _escape(self, path):
+        return path.replace("'", "%27").replace(" ", "%20")
+
+    def _get_query(self):
+        queries = filter(None, [self._expands, self._filter, self._select, self._orderby, self._pagination])
+        return [repr(query) for query in queries] + [self._count()]
+
+    def get_datastream(self):
+        return path.join(self._base_url, "Datastreams?") + self._escape(
+            "&".join(self._get_query())
+        )
+
+    def get_location(self):
+        return path.join(self._base_url, "Locations?")  + self._escape(
+            "&".join(self._get_query())
+        )
+
+    def set_expands(self, expands: Expands):
+        self._expands = expands
+        return self
+
+    def set_filter(self, filter: Filter):
+        self._filter = filter
+        return self
+
+    def set_select(self, select: Select):
+        self._select = select
+        return self
+
+    def set_orderby(self, orderby: OrderBy):
+        self._orderby = orderby
+        return self
+
+    def set_pagination(self, pagination: Pagination):
+        self._pagination = pagination
+        return self
+
+
 
 class URL:
     """
