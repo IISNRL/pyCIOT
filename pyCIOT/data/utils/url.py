@@ -9,13 +9,13 @@ class Select:
     """
 
     def __init__(self, fields: list[str] = []):
-        self.__fields = fields
+        self.__fields = list(set(fields))
 
     def __repr__(self):
         if len(self.__fields):
             return f"$select={','.join(self.__fields)}"
         else:
-            return None
+            return ""
 
     def set_field(self, field: str):
         if field not in self.__fields:
@@ -34,7 +34,7 @@ class OrderBy:
     """
 
     def __init__(self, fields: list[str] = []):
-        self.__fields = fields
+        self.__fields = list(set(fields))
 
     def __repr__(self):
         if len(self.__fields):
@@ -42,7 +42,7 @@ class OrderBy:
             # Now use `desc` as default
             return f"$orderby={','.join([f'{field} desc' for field in self.__fields])}"
         else:
-            return None
+            return ""
 
     def set_field(self, field: str):
         if field not in self.__fields:
@@ -69,7 +69,7 @@ class Pagination:
 
     def __repr__(self):
         queries = []
-        if self.start > 1:
+        if self.__start > 1:
             queries.append(f"$skip={self.__start-1}")
 
         queries.append(f"$top={self.__end-self.__start}")
@@ -87,12 +87,12 @@ class Pagination:
 
     def set_start(self, start):
         self.__check(start, self.__end)
-        self.start = start
+        self.__start = start
         return self
 
     def set_end(self, end):
         self.__check(self.__start, end)
-        self.end = end
+        self.__end = end
         return self
 
 
@@ -102,18 +102,26 @@ class Filter:
     """
 
     def __init__(self, filters: list[OP] = []):
-        self.__filters = filters
+        self.__filters = []
+        for filter in filters:
+            self.set_filter(filter)
 
     def __repr__(self):
         if len(self.__filters):
             return f"$filter=" + " and ".join(
-                map(lambda f: f.get_expression() for f in self.__filters)
+                map(lambda f: f.get_expression(), [f for f in self.__filters])
             )
         else:
-            return None
+            return ""
 
     def set_filter(self, filter: OP):
-        self.__filters.append(filter)
+        if filter not in self.__filters:
+            self.__filters.append(filter)
+        return self
+
+    def remove_filter(self, filter: OP):
+        if filter in self.__filters:
+            self.__filters.remove(filter)
         return self
 
 
@@ -126,20 +134,19 @@ class Expand:
         self,
         name: str,
         select: Select = None,
-        order_by: OrderBy = None,
+        orderby: OrderBy = None,
         pagination: Pagination = None,
         filter: Filter = None,
     ):
         self.__name = name
         self.set_select(select)
-        self.set_order_by(order_by)
+        self.set_order_by(orderby)
         self.set_pagination(pagination)
         self.set_filter(filter)
 
     def __repr__(self):
         inline_queries = [
             self.__select,
-            self.__order_by,
             self.__order_by,
             self.__pagination,
             self.__filter,
@@ -161,23 +168,44 @@ class Expand:
 
     def set_pagination(self, pagination: Pagination):
         self.__pagination = pagination
-        # In a expand query, delimiter will be `;`, not `&`
-        self.__pagination.set_delimiter(";")
+        if pagination:
+            # In a expand query, delimiter will be `;`, not `&`
+            self.__pagination.set_delimiter(";")
         return self
 
     def set_filter(self, filter: Filter):
         self.__filter = filter
         return self
 
+class Expands():
+    def __init__(self, expands: list[Expand]=[]):
+        self.expands = list(expands)
+
+    def __repr__(self):
+        if self.expands:
+            return f"$expand=" + ",".join([repr(expand) for expand in self.expands])
+        else:
+            return ""
 
 class URL:
-    def __init__(self, base_url):
-        self.base_url = base_url
+    """
+    URL Builder
+    """
 
-        # TODO: Construct expansions and filters with a `Class` so that
-        # it would be easier to be used. Now use string as workaround.
-        self.expands = []
-        self.filters = []
+
+    def __init__(
+        self,
+        base_url: str,
+        select: Select = None,
+        order_by: OrderBy = None,
+        pagination: Pagination = None,
+        filter: Filter = None,
+    ):
+        self.base_url = base_url
+        self.set_select(select)
+        self.set_order_by(order_by)
+        self.set_pagination(pagination)
+        self.set_filter(filter)
 
     def add_expand(self, prop):
         """
