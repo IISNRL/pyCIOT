@@ -1,0 +1,39 @@
+{
+  "AIR": {
+    "EPA": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
+      "filters": {
+        "name": "PM2.5",
+        "authority": "行政院環境保護署",
+        "iot_name": "空氣品質測站"
+      }
+    },
+    "EPA_IoT": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_EPAIoT/v1.0/",
+      "filters": {
+        "name": "PM2.5"
+      }
+    },
+    "AS_IoT": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
+      "filters": {
+        "name": "PM2.5",
+        "authority": "中研院",
+        "iot_name": "空品微型感測器"
+      }
+    },
+    "MOST_IoT": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_MOST/v1.0/",
+      "filters": {}
+    },
+    "NCNU_IoT": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_Local/v1.0/",
+      "filters": {}
+    }
+  },
+  "WATER": {},
+  "WEATHER": {},
+  "DISASTER": {},
+  "QUAKE": {},
+  "CCTV": {}
+}

@@ -1,6 +1,5 @@
+import json
 import pkgutil
-import configparser
 
-DATA_SOURCE = configparser.ConfigParser()
-DATA_SOURCE.read_string(pkgutil.get_data(
-    __name__, "../config/data_source.cfg").decode("utf-8"))
+DATA_SOURCE = json.loads(pkgutil.get_data(
+    __name__, "../config/data_source.json").decode("utf-8"))

@@ -152,9 +152,9 @@ class Expand:
             self.__filter,
         ]
 
-        valid_queries = list(filter(None, [repr(q) for q in inline_queries if q]))
-        if len(valid_queries):
-            return f"{self.__name}({';'.join(valid_queries)})"
+        queries = list(filter(None, [repr(q) for q in inline_queries if q]))
+        if len(queries):
+            return f"{self.__name}({';'.join(queries)})"
         else:
             return self.__name
 
@@ -229,7 +229,7 @@ class UrlBuilder():
 
     def _get_query(self):
         queries = filter(None, [self._expands, self._filter, self._select, self._orderby, self._pagination])
-        return [repr(query) for query in queries] + [self._count()]
+        return [repr(query) for query in queries if repr(query)] + [self._count()]
 
     def get_datastream(self):
         return path.join(self._base_url, "Datastreams?") + self._escape(
