@@ -45,7 +45,7 @@ class AIR:
         """
         try:
             typ, org = src.split(":")
-            source = self.sources[typ][org]
+            source = self._sources[typ][org]
         except Exception as e:
             raise Exception(f"Unknown source is provided, {src}")
 
