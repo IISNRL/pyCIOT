@@ -180,8 +180,9 @@ class Expand:
         self.__filter = filter
         return self
 
-class Expands():
-    def __init__(self, expands: list[Expand]=[]):
+
+class Expands:
+    def __init__(self, expands: list[Expand] = []):
         self.__expands = list(expands)
 
     def __repr__(self):
@@ -201,10 +202,12 @@ class Expands():
 
         return None
 
-class UrlBuilder():
+
+class UrlBuilder:
     """
     URL Builder
     """
+
     def __init__(
         self,
         base_url: str,
@@ -228,7 +231,16 @@ class UrlBuilder():
         return path.replace("'", "%27").replace(" ", "%20")
 
     def _get_query(self):
-        queries = filter(None, [self._expands, self._filter, self._select, self._orderby, self._pagination])
+        queries = filter(
+            None,
+            [
+                self._expands,
+                self._filter,
+                self._select,
+                self._orderby,
+                self._pagination,
+            ],
+        )
         return [repr(query) for query in queries if repr(query)] + [self._count()]
 
     def get_datastream(self):
@@ -237,7 +249,7 @@ class UrlBuilder():
         )
 
     def get_location(self):
-        return path.join(self._base_url, "Locations?")  + self._escape(
+        return path.join(self._base_url, "Locations?") + self._escape(
             "&".join(self._get_query())
         )
 

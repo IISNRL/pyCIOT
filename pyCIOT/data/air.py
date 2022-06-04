@@ -1,29 +1,32 @@
 from .config import DATA_SOURCE
 from .utils.crawler import Crawler
-from .utils.url import (
-    UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
-)
-from .utils.op import (
-    EQ, LE, SUBSTRING
-)
+from .utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
+from .utils.op import EQ, LE, SUBSTRING
 
-from typing import Any, Optional
-import json
+from typing import Any
 
 __all__ = ["AIR"]
 
 
 class AIR:
-    def __init__(self):
-        self.key = "AIR"
+    def __init__(self, **kwargs):
+        self._cate = "AIR"
+        self._sources = DATA_SOURCE[self._cate]
 
-    def get_source(self) -> 'list[str]':
+    def get_source(self, typ="OBSERVATION", **kwargs) -> "list[str]":
         """
         Get available sources of AIR sensing data.
         """
-        return [key for key in DATA_SOURCE[self.key].keys()]
+        if typ and typ in self._sources:
+            return [f"{typ}:{name}" for name in self._sources[typ]]
+        else:
+            return [
+                f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
+            ]
 
-    def get_data(self, src: str, stationID: str = None, timestamp: str = None) -> 'list[Any]':
+    def get_data(
+        self, src: str, stationID: str = None, timestamp: str = None
+    ) -> "list[Any]":
         """
         Get sensing data with optional stationID and timestamp.
 
@@ -40,32 +43,48 @@ class AIR:
         ---------
 
         """
-        if src not in DATA_SOURCE[self.key]:
+        try:
+            typ, org = src.split(":")
+            source = self.sources[typ][org]
+        except Exception as e:
             raise Exception(f"Unknown source is provided, {src}")
 
-        expands = Expands([
-            Expand("Thing"),
-            Expand("Observations", orderby=OrderBy(["phenomenonTime"]), pagination=Pagination())
-        ])
+        expands = Expands(
+            [
+                Expand("Thing"),
+                Expand(
+                    "Observations",
+                    orderby=OrderBy(["phenomenonTime"]),
+                    pagination=Pagination(),
+                ),
+            ]
+        )
         if timestamp:
             # TODO: Check timestamp format
-            expands.get_expand("Observations").set_filter(Filter([LE("phenomenonTime", timestamp)]))
+            expands.get_expand("Observations").set_filter(
+                Filter([LE("phenomenonTime", timestamp)])
+            )
 
         filter = Filter()
-        if "name" in DATA_SOURCE[self.key][src]["filters"]:
-            filter.set_filter(EQ("name", DATA_SOURCE[self.key][src]["filters"]["name"]))
-        if "authority" in DATA_SOURCE[self.key][src]["filters"]:
-            filter.set_filter(EQ("Thing/properties/authority", DATA_SOURCE[self.key][src]["filters"]["authority"]))
-        if "iot_name" in DATA_SOURCE[self.key][src]["filters"]:
-            filter.set_filter(SUBSTRING("Thing/name", DATA_SOURCE[self.key][src]["filters"]["iot_name"]))
+        if "name" in source["filters"]:
+            filter.set_filter(EQ("name", source["filters"]["name"]))
+        if "authority" in source["filters"]:
+            filter.set_filter(
+                EQ(
+                    "Thing/properties/authority",
+                    source["filters"]["authority"],
+                )
+            )
+        if "iot_name" in source["filters"]:
+            filter.set_filter(SUBSTRING("Thing/name", source["filters"]["iot_name"]))
 
         if stationID:
             filter.set_filter(EQ("Thing/properties/stationID", stationID))
 
-        url = UrlBuilder(DATA_SOURCE[self.key][src]["base_url"], expands=expands, filter=filter)
+        url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
         return Crawler().get(url.get_datastream())
 
-    def get_station(self, src: str, stationID: str = None) -> 'list[Any]':
+    def get_station(self, src: str, stationID: str = None) -> "list[Any]":
         """
         Get locations of sensing devices
 
@@ -80,19 +99,27 @@ class AIR:
         ----------
 
         """
-        if src not in DATA_SOURCE[self.key]:
+        try:
+            typ, org = src.split(":")
+            source = self.sources[typ][org]
+        except Exception as e:
             raise Exception(f"Unknown source is provided, {src}")
 
         expands = Expands([Expand("Things")])
 
         filter = Filter()
-        if "authority" in DATA_SOURCE[self.key][src]["filters"]:
-            filter.set_filter(EQ("Thing/properties/authority", DATA_SOURCE[self.key][src]["filters"]["authority"]))
-        if "iot_name" in DATA_SOURCE[self.key][src]["filters"]:
-            filter.set_filter(SUBSTRING("Thing/name", DATA_SOURCE[self.key][src]["filters"]["iot_name"]))
+        if "authority" in source["filters"]:
+            filter.set_filter(
+                EQ(
+                    "Thing/properties/authority",
+                    source["filters"]["authority"],
+                )
+            )
+        if "iot_name" in source["filters"]:
+            filter.set_filter(SUBSTRING("Thing/name", source["filters"]["iot_name"]))
 
         if stationID:
             filter.set_filter(EQ("Thing/properties/stationID", stationID))
 
-        url = UrlBuilder(DATA_SOURCE[self.key][src]["base_url"], expands=expands, filter=filter)
+        url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
         return Crawler().get(url.get_location())

@@ -1,39 +1,182 @@
 {
   "AIR": {
-    "EPA": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
-      "filters": {
-        "name": "PM2.5",
-        "authority": "行政院環境保護署",
-        "iot_name": "空氣品質測站"
+    "OBSERVATION": {
+      "EPA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
+        "description": "環境保護署國家空品測站",
+        "filters": {
+          "name": "PM2.5",
+          "authority": "行政院環境保護署",
+          "iot_name": "空氣品質測站"
+        }
+      },
+      "EPA_IoT": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_EPAIoT/v1.0/",
+        "description": "環境保護署智慧城鄉空品微型感測器",
+        "filters": {
+          "name": "PM2.5"
+        }
+      },
+      "AS_IoT": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
+        "description": "中研院校園空品微型感測器",
+        "filters": {
+          "name": "PM2.5",
+          "authority": "中研院",
+          "iot_name": "空品微型感測器"
+        }
+      },
+      "MOST_IoT": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_MOST/v1.0/",
+        "description": "科技部智慧園區空品測站",
+        "filters": {}
+      },
+      "NCNU_IoT": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_Local/v1.0/",
+        "description": "暨南大學在地空品微型感測器 (PM2.5十分鐘平均值)",
+        "filters": {}
+      }
+    }
+  },
+  "WATER": {
+    "WATER_LEVEL_METER": {
+      "WRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署河川水位站",
+        "filters": {
+          "authority": "水利署",
+          "description": "河川水位站"
+        }
+      },
+      "WRA2": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署（與縣市政府合建）區域排水水位站",
+        "filters": {
+          "authority": "水利署（與縣市政府合建）",
+          "description": "區域排水水位站"
+        }
+      },
+      "IA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "農田水利署埤塘水位站",
+        "filters": {}
       }
     },
-    "EPA_IoT": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_EPAIoT/v1.0/",
-      "filters": {
-        "name": "PM2.5"
+    "WATER_LEVEL_VOLTAGE": {
+      "IRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "農田水利署農田灌溉圳路水位站",
+        "filters": {}
       }
     },
-    "AS_IoT": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
-      "filters": {
-        "name": "PM2.5",
-        "authority": "中研院",
-        "iot_name": "空品微型感測器"
+    "GATE": {
+      "WRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署閘門",
+        "filters": {}
+      },
+      "WRA2": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署（與縣市政府合建）閘門",
+        "filters": {}
+      },
+      "IA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "農田水利署閘門",
+        "filters": {}
       }
     },
-    "MOST_IoT": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_MOST/v1.0/",
-      "filters": {}
+    "PUMPING_STATION": {}
+  },
+  "WEATHER": {
+    "GENERAL": {
+      "CWB": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Weather/v1.0/",
+        "description": "中央氣象局局屬氣象站",
+        "filters": {
+          "iot_name": "局屬氣象站"
+        }
+      },
+      "CWB_IOT": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Weather/v1.0/",
+        "description": "中央氣象局自動氣象站",
+        "filters": {
+          "iot_name": "自動氣象站"
+        }
+      }
     },
-    "NCNU_IoT": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_Local/v1.0/",
+    "RAINFALL": {
+      "CWB": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Rain/v1.0/",
+        "description": "中央氣象局雨量站",
+        "filters": {}
+      },
+      "WRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署雨量感測器",
+        "filters": {
+          "authority": "水利署",
+          "description": "Datastream_Category_type=雨量感測器"
+        }
+      },
+      "WRA2": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署（與縣市政府合建）雨量感測器",
+        "filters": {
+          "authority": "水利署（與縣市政府合建）",
+          "description": "Datastream_Category_type=雨量感測器"
+        }
+      },
+      "IA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "農田水利署雨量感測器",
+        "filters": {
+          "authority": "農田水利署",
+          "description": "Datastream_Category_type=雨量感測器"
+        }
+      }
+    },
+    "IMAGE": {
+      "base_url": "https://sta.ci.taiwan.gov.tw/STA_Radar/v1.0/",
+      "description": "中央氣象局雷達整合回波圖",
       "filters": {}
     }
   },
-  "WATER": {},
-  "WEATHER": {},
+  "QUAKE": {
+    "EARTHQUAKE": {
+      "CWB": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Earthquake_v2/v1.0/",
+        "description": "中央氣象局地震監測站",
+        "filters": {
+          "name": "號地震"
+        }
+      }
+    }
+  },
   "DISASTER": {},
-  "QUAKE": {},
-  "CCTV": {}
+  "CCTV": {
+    "IMAGE": {
+      "EPA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
+        "description": "環保署空品監測即時影像器",
+        "filters": {
+          "authority": "環保署"
+        }
+      },
+      "WRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
+        "description": "水利署水利防災用影像器",
+        "filters": {
+          "authority": "經濟部水利署"
+        }
+      },
+      "COA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
+        "description": "行政院農委會土石流觀測站影像",
+        "filters": {
+          "authority": "行政院農委會"
+        }
+      }
+    }
+  }
 }
