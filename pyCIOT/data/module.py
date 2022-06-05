@@ -47,7 +47,7 @@ class Module:
                 "description": value["description"],
                 "properties": value["properties"],
                 "data": self.parseDatastrems(value["Datastreams"]),
-                "locations": self.parseLocations(value["Locations"]),
+                "location": self.parseLocations(value["Locations"]),
             }
 
         return list(map(parse, values))
@@ -58,7 +58,7 @@ class Module:
                 "name": value["name"],
                 "description": value["description"],
                 "properties": value["properties"],
-                "locations": self.parseLocations(value["Locations"]),
+                "location": self.parseLocations(value["Locations"]),
             }
 
         return list(map(parse, values))
