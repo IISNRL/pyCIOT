@@ -165,21 +165,21 @@
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
         "description": "環保署空品監測即時影像器",
         "filters": {
-          "authority": "環保署"
+          "eq": { "properties/authority": "環保署" }
         }
       },
       "WRA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
         "description": "水利署水利防災用影像器",
         "filters": {
-          "authority": "經濟部水利署"
+          "eq": { "properties/authority": "經濟部水利署" }
         }
       },
       "COA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_CCTV/v1.0/",
         "description": "行政院農委會土石流觀測站影像",
         "filters": {
-          "authority": "行政院農委會"
+          "eq": { "properties/authority": "行政院農委會" }
         }
       }
     }

@@ -21,11 +21,11 @@ Data Sources
 """
 
 from .air import Air
+from .cctv import CCTV
 from .weather import Weather
 
 # import pyCIOT.data.water as water
 # import pyCIOT.data.disaster as disaster
 # import pyCIOT.data.quake as quake
-# import pyCIOT.data.cctv as cctv
 
 __all__ = [s for s in dir() if not s.startswith("_")]
