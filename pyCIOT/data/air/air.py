@@ -1,14 +1,14 @@
-from .config import DATA_SOURCE
-from .utils.crawler import Crawler
-from .utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
-from .utils.op import EQ, LE, SUBSTRING
+from data.air.parser import parse_data, parse_station
+from ..config import DATA_SOURCE
+from ..module import Module
+from ..utils.crawler import Crawler
+from ..utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
+from ..utils.op import EQ, LE
 
 from typing import Any
 
-__all__ = ["AIR"]
 
-
-class AIR:
+class Air(Module):
     def __init__(self, **kwargs):
         self._cate = "AIR"
         self._sources = DATA_SOURCE[self._cate]
@@ -25,7 +25,7 @@ class AIR:
             ]
 
     def get_data(
-        self, src: str, stationID: str = None, timestamp: str = None
+        self, src: str, stationID: str = None, timestamp: str = None, **kwargs
     ) -> "list[Any]":
         """
         Get sensing data with optional stationID and timestamp.
@@ -47,13 +47,14 @@ class AIR:
             typ, org = src.split(":")
             source = self._sources[typ][org]
         except Exception as e:
-            raise Exception(f"Unknown source is provided, {src}")
+            raise Exception("Unknown source is provided:", src)
 
         expands = Expands(
             [
-                Expand("Thing"),
+                Expand("Datastreams"),
+                Expand("Locations"),
                 Expand(
-                    "Observations",
+                    "Datastreams/Observations",
                     orderby=OrderBy(["phenomenonTime"]),
                     pagination=Pagination(),
                 ),
@@ -61,28 +62,17 @@ class AIR:
         )
         if timestamp:
             # TODO: Check timestamp format
-            expands.get_expand("Observations").set_filter(
+            expands.get_expand("Datastreams/Obaservations").set_filter(
                 Filter([LE("phenomenonTime", timestamp)])
             )
 
-        filter = Filter()
-        if "name" in source["filters"]:
-            filter.set_filter(EQ("name", source["filters"]["name"]))
-        if "authority" in source["filters"]:
-            filter.set_filter(
-                EQ(
-                    "Thing/properties/authority",
-                    source["filters"]["authority"],
-                )
-            )
-        if "iot_name" in source["filters"]:
-            filter.set_filter(SUBSTRING("Thing/name", source["filters"]["iot_name"]))
-
+        filter = self.filter_parser(source["filters"])
         if stationID:
-            filter.set_filter(EQ("Thing/properties/stationID", stationID))
+            filter.set_filter(EQ("properties/stationID", stationID))
 
         url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
-        return Crawler().get(url.get_datastream())
+        res = Crawler().get(url.get_thing())
+        return parse_data(res)
 
     def get_station(self, src: str, stationID: str = None) -> "list[Any]":
         """
@@ -101,25 +91,15 @@ class AIR:
         """
         try:
             typ, org = src.split(":")
-            source = self.sources[typ][org]
+            source = self._sources[typ][org]
         except Exception as e:
-            raise Exception(f"Unknown source is provided, {src}")
+            raise Exception("Unknown source is provided:", src)
 
-        expands = Expands([Expand("Things")])
-
-        filter = Filter()
-        if "authority" in source["filters"]:
-            filter.set_filter(
-                EQ(
-                    "Thing/properties/authority",
-                    source["filters"]["authority"],
-                )
-            )
-        if "iot_name" in source["filters"]:
-            filter.set_filter(SUBSTRING("Thing/name", source["filters"]["iot_name"]))
-
+        expands = Expands([Expand("Locations")])
+        filter = self.filter_parser(source["filters"])
         if stationID:
-            filter.set_filter(EQ("Thing/properties/stationID", stationID))
+            filter.set_filter(EQ("properties/stationID", stationID))
 
         url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
-        return Crawler().get(url.get_location())
+        res = Crawler().get(url.get_thing())
+        return parse_station(res)

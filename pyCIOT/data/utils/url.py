@@ -243,13 +243,13 @@ class UrlBuilder:
         )
         return [repr(query) for query in queries if repr(query)] + [self._count()]
 
-    def get_datastream(self):
-        return path.join(self._base_url, "Datastreams?") + self._escape(
+    def get_thing(self):
+        return path.join(self._base_url, "Things?") + self._escape(
             "&".join(self._get_query())
         )
 
-    def get_location(self):
-        return path.join(self._base_url, "Locations?") + self._escape(
+    def get_datastream(self):
+        return path.join(self._base_url, "Datastreams?") + self._escape(
             "&".join(self._get_query())
         )
 

@@ -9,8 +9,12 @@ class OP(ABC):
         self._field = field
         self._value = value
 
-    def __eq__(self, other: 'OP'):
-        return (self._field, self._value, type(self)) == (other._field, other._value, type(other))
+    def __eq__(self, other: "OP"):
+        return (self._field, self._value, type(self)) == (
+            other._field,
+            other._value,
+            type(other),
+        )
 
     @classmethod
     def validate_iso8601(self, str) -> bool:
@@ -20,7 +24,7 @@ class OP(ABC):
     @classmethod
     def transform(self, value: Any) -> str | Any:
         if isinstance(value, datetime.date):
-            return value.isoformat(timespec='seconds') + "Z"
+            return value.isoformat(timespec="seconds") + "Z"
         elif isinstance(value, str) and not OP.validate_iso8601(value):
             return f"'{value}'"
         else:
@@ -30,47 +34,57 @@ class OP(ABC):
     def get_expression() -> str:
         raise NotImplementedError
 
+
 """
 Comparision
 ===========
 """
+
+
 class COMPOP(OP):
     def __init__(self, field, value, comp):
         super().__init__(field, value)
         self._comp = comp
 
-    def __eq__(self, other: 'COMPOP'):
-        return (self._comp, type(self)) == (self._comp, type(other)) and super().__eq__(other)
+    def __eq__(self, other: "COMPOP"):
+        return (self._comp, type(self)) == (self._comp, type(other)) and super().__eq__(
+            other
+        )
 
     def get_expression(self):
         return f"{self._field} {self._comp} {OP.transform(self._value)}"
+
 
 class EQ(COMPOP):
     def __init__(self, field, value):
         super().__init__(field, value, "eq")
 
+
 class LE(COMPOP):
     def __init__(self, field, value):
         super().__init__(field, value, "le")
+
 
 class GE(COMPOP):
     def __init__(self, field, value):
         super().__init__(field, value, "ge")
 
+
 class LT(COMPOP):
     def __init__(self, field, value):
         super().__init__(field, value, "lt")
+
 
 class GT(COMPOP):
     def __init__(self, field, value):
         super().__init__(field, value, "gt")
 
 
-
 """
 Other OPs
 ==========
 """
+
 
 class SUBSTRING(OP):
     def __init__(self, field, value):

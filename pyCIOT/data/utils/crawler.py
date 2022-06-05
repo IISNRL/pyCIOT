@@ -11,7 +11,7 @@ class Crawler:
     def _request(self, url):
         return json.loads(requests.get(url, verify=self.verify).content)
 
-    def get(self, url):
+    def get(self, url: str):
         with tqdm() as bar:
             data = self._request(url)
             count = data.get("@iot.count", None)

@@ -15,16 +15,17 @@ CCTV     - 空品監測即時影像
 
 Data Sources
 ============
-- See https://sta.ci.taiwan.gov.tw/
+- See https://ci.taiwan.gov.tw/dsp/dataset_air.aspx
 - Docs https://ci.taiwan.gov.tw/dsp/sensor-things.aspx
 
 """
 
-from pyCIOT.data.air import AIR
+from .air import Air
+
 # import pyCIOT.data.water as water
 # import pyCIOT.data.weather as weather
 # import pyCIOT.data.disaster as disaster
 # import pyCIOT.data.quake as quake
 # import pyCIOT.data.cctv as cctv
 
-__all__ = [s for s in dir() if not s.startswith('_')]
+__all__ = [s for s in dir() if not s.startswith("_")]

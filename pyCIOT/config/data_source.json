@@ -5,25 +5,19 @@
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
         "description": "環境保護署國家空品測站",
         "filters": {
-          "name": "PM2.5",
-          "authority": "行政院環境保護署",
-          "iot_name": "空氣品質測站"
+          "eq": { "properties/authority": "行政院環境保護署" }
         }
       },
       "EPA_IoT": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_EPAIoT/v1.0/",
         "description": "環境保護署智慧城鄉空品微型感測器",
-        "filters": {
-          "name": "PM2.5"
-        }
+        "filters": {}
       },
       "AS_IoT": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
         "description": "中研院校園空品微型感測器",
         "filters": {
-          "name": "PM2.5",
-          "authority": "中研院",
-          "iot_name": "空品微型感測器"
+          "eq": { "properties/authority": "中研院" }
         }
       },
       "MOST_IoT": {
