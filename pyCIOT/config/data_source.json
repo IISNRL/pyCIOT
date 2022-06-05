@@ -88,14 +88,14 @@
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_Weather/v1.0/",
         "description": "中央氣象局局屬氣象站",
         "filters": {
-          "iot_name": "局屬氣象站"
+          "sub": { "name": "局屬氣象站" }
         }
       },
-      "CWB_IOT": {
+      "CWB_IoT": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_Weather/v1.0/",
         "description": "中央氣象局自動氣象站",
         "filters": {
-          "iot_name": "自動氣象站"
+          "sub": { "name": "自動氣象站" }
         }
       }
     },
@@ -109,31 +109,42 @@
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署雨量感測器",
         "filters": {
-          "authority": "水利署",
-          "description": "Datastream_Category_type=雨量感測器"
+          "eq": { "properties/authority_type": "水利署" },
+          "sub": { "Datastreams/description": "雨量感測器" }
+        },
+        "datastream_filters": {
+          "sub": { "description": "雨量感測器" }
         }
       },
       "WRA2": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署（與縣市政府合建）雨量感測器",
         "filters": {
-          "authority": "水利署（與縣市政府合建）",
-          "description": "Datastream_Category_type=雨量感測器"
+          "eq": { "properties/authority_type": "水利署（與縣市政府合建）" },
+          "sub": { "Datastreams/description": "雨量感測器" }
+        },
+        "datastream_filters": {
+          "sub": { "description": "雨量感測器" }
         }
       },
       "IA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "農田水利署雨量感測器",
         "filters": {
-          "authority": "農田水利署",
-          "description": "Datastream_Category_type=雨量感測器"
+          "eq": { "properties/authority_type": "農田水利署" },
+          "sub": { "Datastreams/description": "雨量感測器" }
+        },
+        "datastream_filters": {
+          "sub": { "description": "雨量感測器" }
         }
       }
     },
     "IMAGE": {
-      "base_url": "https://sta.ci.taiwan.gov.tw/STA_Radar/v1.0/",
-      "description": "中央氣象局雷達整合回波圖",
-      "filters": {}
+      "CWB": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Radar/v1.0/",
+        "description": "中央氣象局雷達整合回波圖",
+        "filters": {}
+      }
     }
   },
   "QUAKE": {

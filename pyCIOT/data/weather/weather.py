@@ -6,13 +6,13 @@ from ..utils.op import EQ, LE
 from typing import Any
 
 
-class Air(Module):
+class Weather(Module):
     def __init__(self, **kwargs):
-        super().__init__("AIR")
+        super().__init__("WEATHER")
 
-    def get_source(self, typ: str = "OBSERVATION", **kwargs) -> "list[str]":
+    def get_source(self, typ: str = None) -> list[str]:
         """
-        Get available sources of AIR sensing data.
+        Get available sources of Weather data.
         """
         if typ and typ in self._sources:
             return [f"{typ}:{name}" for name in self._sources[typ]]
@@ -21,9 +21,7 @@ class Air(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(
-        self, src: str, stationID: str = None, timestamp: str = None
-    ) -> "list[Any]":
+    def get_data(self, src: str, stationID: str = None) -> list[Any]:
         """
         Get sensing data with optional stationID and timestamp.
 
@@ -33,8 +31,6 @@ class Air(Module):
             Project src from `get_source`
         stationID:
             Specifies the station
-        timestamp:
-            Specifies the timestamp
 
         Returns
         ---------
@@ -46,9 +42,14 @@ class Air(Module):
         except Exception as e:
             raise Exception("Unknown source is provided:", src)
 
+        if "datastream_filters" in source:
+            dfilter = self.filter_parser(source["datastream_filters"])
+        else:
+            dfilter = None
+
         expands = Expands(
             [
-                Expand("Datastreams"),
+                Expand("Datastreams", filter=dfilter),
                 Expand("Locations"),
                 Expand(
                     "Datastreams/Observations",
@@ -57,11 +58,6 @@ class Air(Module):
                 ),
             ]
         )
-        if timestamp:
-            # TODO: Check timestamp format
-            expands.get_expand("Datastreams/Obaservations").set_filter(
-                Filter([LE("phenomenonTime", timestamp)])
-            )
 
         filter = self.filter_parser(source["filters"])
         if stationID:
@@ -71,7 +67,7 @@ class Air(Module):
         res = Crawler().get(url.get_thing())
         return self.parse_data(res)
 
-    def get_station(self, src: str, stationID: str = None) -> "list[Any]":
+    def get_station(self, src: str, stationID: str = None) -> list[Any]:
         """
         Get locations of sensing devices
 

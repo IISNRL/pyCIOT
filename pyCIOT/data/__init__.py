@@ -21,9 +21,9 @@ Data Sources
 """
 
 from .air import Air
+from .weather import Weather
 
 # import pyCIOT.data.water as water
-# import pyCIOT.data.weather as weather
 # import pyCIOT.data.disaster as disaster
 # import pyCIOT.data.quake as quake
 # import pyCIOT.data.cctv as cctv
