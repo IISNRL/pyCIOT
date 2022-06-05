@@ -1,5 +1,5 @@
-from data.air.parser import parse_data, parse_station
-from ..config import DATA_SOURCE
+from .parser import parse_data, parse_station
+
 from ..module import Module
 from ..utils.crawler import Crawler
 from ..utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
@@ -10,10 +10,9 @@ from typing import Any
 
 class Air(Module):
     def __init__(self, **kwargs):
-        self._cate = "AIR"
-        self._sources = DATA_SOURCE[self._cate]
+        super().__init__("AIR")
 
-    def get_source(self, typ="OBSERVATION", **kwargs) -> "list[str]":
+    def get_source(self, typ: str = "OBSERVATION", **kwargs) -> "list[str]":
         """
         Get available sources of AIR sensing data.
         """

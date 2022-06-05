@@ -1,10 +1,12 @@
+from .config import DATA_SOURCE
 from data.utils.op import EQ, GE, GT, LE, LT, SUBSTRING
 from data.utils.url import Filter
 
 
+
 class Module:
-    def __init__(self):
-        pass
+    def __init__(self, cate):
+        self._sources = DATA_SOURCE[cate]
 
     def filter_parser(self, json_filter: dict) -> Filter:
         filter = Filter()
