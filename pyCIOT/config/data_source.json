@@ -149,12 +149,10 @@
   },
   "QUAKE": {
     "EARTHQUAKE": {
-      "CWB": {
+      "CWB+NCREE": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_Earthquake_v2/v1.0/",
-        "description": "中央氣象局地震監測站",
-        "filters": {
-          "name": "號地震"
-        }
+        "description": "中央氣象局與國震中心地震監測站",
+        "filters": {}
       }
     }
   },
