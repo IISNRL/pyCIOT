@@ -3,12 +3,28 @@ from ..utils.crawler import Crawler
 from ..utils.op import EQ, SUBSTRING
 from ..utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
 
-from typing import Any
+from typing import Any, overload
 
 
 class Quake(Module):
     def __init__(self):
         super().__init__("QUAKE")
+
+    def parseDatastrems(self, datastreams):
+        """
+        Overwrite method with customized one
+        """
+
+        def parse(datastream):
+            return {
+                "name": datastream["name"],
+                "description": datastream["description"],
+                "timestamp": datastream["Observations"][0]["phenomenonTime"],
+                # Flatten from result -> ref -> value to result -> value
+                "value": datastream["Observations"][0]["result"]["ref"],
+            }
+
+        return list(map(parse, filter(lambda x: len(x["Observations"]), datastreams)))
 
     def get_source(self, typ="EARTHQUAKE"):
         """
