@@ -156,7 +156,16 @@
       }
     }
   },
-  "DISASTER": {},
+  "DISASTER": {
+    "ALERT": {
+      "base_url": "https://alerts.ncdr.nat.gov.tw/JSONAtomFeed.ashx",
+      "description": "災防中心災害示警"
+    },
+    "NOTICE": {
+      "base_url": "https://portal2.emic.gov.tw/Pub/ERA2/OpenData/",
+      "description": "消防署災情通報"
+    }
+  },
   "CCTV": {
     "IMAGE": {
       "EPA": {
