@@ -22,7 +22,7 @@ class OP(ABC):
         return re.compile(regex).match(str) is not None
 
     @classmethod
-    def transform(self, value: Any) -> str | Any:
+    def transform(self, value: Any) -> Any:
         if isinstance(value, datetime.date):
             return value.isoformat(timespec="seconds") + "Z"
         elif isinstance(value, str) and not OP.validate_iso8601(value):
