@@ -37,7 +37,7 @@ class Quake(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(self, src: str, eventID: int = None) -> list[Any]:
+    def get_data(self, src: str, eventID: int = None) -> "list[Any]":
         """
         Get sensing data of earthquake events
 
@@ -81,7 +81,7 @@ class Quake(Module):
         res = Crawler().get(url.get_thing())
         return self.parse_data(res)
 
-    def get_station(self, src: str, stationID: int = None) -> list[Any]:
+    def get_station(self, src: str, stationID: int = None) -> "list[Any]":
         try:
             typ, org = src.split(":")
             source = self._sources[typ][org]

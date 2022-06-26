@@ -8,7 +8,7 @@ class Select:
     Class for `$select`
     """
 
-    def __init__(self, fields: list[str] = []):
+    def __init__(self, fields: "list[str]" = []):
         self.__fields = list(set(fields))
 
     def __repr__(self):
@@ -33,7 +33,7 @@ class OrderBy:
     Class for `$orderby`
     """
 
-    def __init__(self, fields: list[str] = []):
+    def __init__(self, fields: "list[str]" = []):
         self.__fields = list(set(fields))
 
     def __repr__(self):
@@ -101,7 +101,7 @@ class Filter:
     Class for `$filter`
     """
 
-    def __init__(self, filters: list[OP] = []):
+    def __init__(self, filters: "list[OP]" = []):
         self.__filters = []
         for filter in filters:
             self.set_filter(filter)
@@ -182,7 +182,7 @@ class Expand:
 
 
 class Expands:
-    def __init__(self, expands: list[Expand] = []):
+    def __init__(self, expands: "list[Expand]" = []):
         self.__expands = list(expands)
 
     def __repr__(self):

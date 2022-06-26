@@ -45,7 +45,7 @@ class Module:
             "address": addr[0]["location"]["address"] if addr else None,
         }
 
-    def parse_data(self, values: list[Any]) -> list[Any]:
+    def parse_data(self, values: "list[Any]") -> "list[Any]":
         def parse(value):
             return {
                 "name": value["name"],
@@ -57,7 +57,7 @@ class Module:
 
         return list(map(parse, values))
 
-    def parse_station(self, values: list[Any]) -> list[Any]:
+    def parse_station(self, values: "list[Any]") -> "list[Any]":
         def parse(value):
             return {
                 "name": value["name"],

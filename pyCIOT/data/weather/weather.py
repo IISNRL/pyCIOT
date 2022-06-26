@@ -10,7 +10,7 @@ class Weather(Module):
     def __init__(self, **kwargs):
         super().__init__("WEATHER")
 
-    def get_source(self, typ: str = None) -> list[str]:
+    def get_source(self, typ: str = None) -> " list[str]":
         """
         Get available sources of Weather data.
         """
@@ -21,7 +21,7 @@ class Weather(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(self, src: str, stationID: str = None) -> list[Any]:
+    def get_data(self, src: str, stationID: str = None) -> "list[Any]":
         """
         Get sensing data with optional stationID and timestamp.
 
@@ -67,7 +67,7 @@ class Weather(Module):
         res = Crawler().get(url.get_thing())
         return self.parse_data(res)
 
-    def get_station(self, src: str, stationID: str = None) -> list[Any]:
+    def get_station(self, src: str, stationID: str = None) -> "list[Any]":
         """
         Get locations of sensing devices
 

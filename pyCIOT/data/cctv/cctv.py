@@ -20,7 +20,7 @@ class CCTV(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(self, src: str) -> list[Any]:
+    def get_data(self, src: str) -> "list[Any]":
         """
         Get image data of CCTV
 
