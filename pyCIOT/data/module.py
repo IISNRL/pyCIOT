@@ -1,6 +1,6 @@
 from .config import DATA_SOURCE
-from data.utils.op import EQ, GE, GT, LE, LT, SUBSTRING
-from data.utils.url import Filter
+from .utils.op import EQ, GE, GT, LE, LT, SUBSTRING
+from .utils.url import Filter
 
 from collections.abc import Iterable
 from typing import Any

@@ -1,4 +1,4 @@
-
+import glob
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -12,7 +12,9 @@ setuptools.setup(
     description="Simple python module for retrieving data from Civil IOT Taiwan Data Service Platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(where="pyCIOT"),
+    packages=setuptools.find_packages(),
+    include_package_data=True,
+    data_files=glob.glob("pyCIOT/config/**"),
     url="https://github.com/IISNRL/pyCIOT",
     project_urls={
         # "Documentation": "",
@@ -23,9 +25,10 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-    ],                                      # Information to filter the project on PyPi website
-    python_requires='>=3.6',                # Minimum version requirement of the package
-    py_modules=["pyCIOT"],                  # Name of the python package
-    package_dir={'':'pyCIOT'},              # Directory of the source code of the package
-    install_requires=[]                     # Install other dependencies if any
+    ],
+    python_requires=">=3.6",
+    py_modules=["pyCIOT"],
+    # package_dir={"pyCIOT": "pyCIOT"},
+    install_requires=["requests", "tqdm"],
+    tests_require=["pytest"],
 )
