@@ -59,7 +59,7 @@ class Air(Module):
         )
         if timestamp:
             # TODO: Check timestamp format
-            expands.get_expand("Datastreams/Obaservations").set_filter(
+            expands.get_expand("Datastreams/Observations").set_filter(
                 Filter([LE("phenomenonTime", timestamp)])
             )
 
