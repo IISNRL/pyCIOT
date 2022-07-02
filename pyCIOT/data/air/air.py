@@ -67,7 +67,12 @@ class Air(Module):
         if stationID:
             filter.set_filter(EQ("properties/stationID", stationID))
 
-        url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
+        url = UrlBuilder(
+            source["base_url"],
+            expands=expands,
+            filter=filter,
+            pagination=Pagination(1, 1001),
+        )
         res = Crawler().get(url.get_thing())
         return self.parse_data(res)
 
@@ -97,6 +102,11 @@ class Air(Module):
         if stationID:
             filter.set_filter(EQ("properties/stationID", stationID))
 
-        url = UrlBuilder(source["base_url"], expands=expands, filter=filter)
+        url = UrlBuilder(
+            source["base_url"],
+            expands=expands,
+            filter=filter,
+            pagination=Pagination(1, 1001),
+        )
         res = Crawler().get(url.get_thing())
         return self.parse_station(res)
