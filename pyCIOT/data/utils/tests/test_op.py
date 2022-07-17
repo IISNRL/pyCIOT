@@ -1,5 +1,5 @@
 import datetime
-from pyCIOT.data.utils.op import OP, EQ, LE, LT, GE, GT, SUBSTRING
+from pyCIOT.data.utils.op import OP, EQ, LE, LT, GE, GT, SUBSTRING, GEODISTANCE
 
 comparisons: "list[OP]" = [EQ, LE, LT, GE, GT]
 
@@ -32,6 +32,14 @@ def test_GT():
 def test_substring():
     substring = SUBSTRING("field", "value")
     assert substring.get_expression() == "substringof('value',field)"
+
+
+def test_geodistance():
+    geo = GEODISTANCE(25.018, 121.525, 1)
+    assert (
+        geo.get_expression()
+        == "geo.distance(Locations/location, geography'POINT(121.525 25.018)') le 0.01"
+    )
 
 
 def test_transformation():

@@ -92,3 +92,16 @@ class SUBSTRING(OP):
 
     def get_expression(self):
         return f"substringof('{self._value}',{self._field})"
+
+
+class GEODISTANCE(OP):
+    # NOTE: Distance 0.01 is for 1km.
+    def __init__(self, latitude, longitude, distance, op: OP = LE):
+        super().__init__(f"{latitude}-{longitude}", f"{distance}")
+        self.op = op(
+            f"geo.distance(Locations/location, geography'POINT({longitude} {latitude})')",
+            distance / 100,
+        )
+
+    def get_expression(self):
+        return self.op.get_expression()
