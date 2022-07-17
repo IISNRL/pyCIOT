@@ -1,6 +1,6 @@
 {
   "AIR": {
-    "OBSERVATION": {
+    "OBS": {
       "EPA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_AirQuality_v2/v1.0/",
         "description": "環境保護署國家空品測站",
@@ -33,54 +33,175 @@
     }
   },
   "WATER": {
-    "WATER_LEVEL_METER": {
-      "WRA": {
+    "WATER_LEVEL": {
+      "WRA_RIVER": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署河川水位站",
         "filters": {
-          "authority": "水利署",
-          "description": "河川水位站"
+          "eq": {
+            "properties/authority_type": "水利署",
+            "Datastreams/name": "水位"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=河川水位站"
+          }
+        },
+        "datastream_filters": {
+          "name": "水位"
         }
       },
-      "WRA2": {
+      "WRA_GROUNDWATER": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署地下水位站",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=地下水位站"
+          }
+        }
+      },
+      "WRA2_DRAINAGE": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署（與縣市政府合建）區域排水水位站",
         "filters": {
-          "authority": "水利署（與縣市政府合建）",
-          "description": "區域排水水位站"
+          "eq": {
+            "properties/authority_type": "水利署（與縣市政府合建）",
+            "Datastreams/name": "水位"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=區域排水水位站"
+          }
+        },
+        "datastream_filters": {
+          "name": "水位"
         }
       },
-      "IA": {
+      "IA_POND": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "農田水利署埤塘水位站",
-        "filters": {}
-      }
-    },
-    "WATER_LEVEL_VOLTAGE": {
-      "IRA": {
+        "filters": {
+          "eq": {
+            "properties/authority_type": "農田水利署"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=埤塘水位站"
+          }
+        }
+      },
+      "IA_IRRIGATION": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "農田水利署農田灌溉圳路水位站",
-        "filters": {}
+        "filters": {
+          "eq": {
+            "properties/authority_type": "農田水利署",
+            "Datastreams/name": "水深"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=農田灌溉圳路水位站"
+          }
+        },
+        "datastream_filters": {
+          "name": "水深"
+        }
       }
     },
     "GATE": {
+      // Gate contains 閘門開度、閘門絕對開度、閘門內水位、閘門外水位, all is mixed-up.
+      // TODO: Discuss about which one is going to be left in dataset.
       "WRA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署閘門",
-        "filters": {}
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=閘門"
+          }
+        }
       },
       "WRA2": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署（與縣市政府合建）閘門",
-        "filters": {}
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署（與縣市政府合建）"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=閘門"
+          }
+        }
       },
       "IA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "農田水利署閘門",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "農田水利署"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=閘門"
+          }
+        }
+      }
+    },
+    "PUMPING": {
+      "WRA2": {
+        // 累計流量(tons)、表值(tons)、水位(m)
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署（與縣市政府合建）抽水站",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署（與縣市政府合建）"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=抽水站"
+          }
+        }
+      },
+      "TPE": {
+        // 總抽水狀態、內水位、外水位、抽水機數量、重力閘門
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_Pump_Taipei/v1.0/",
+        "description": "臺北市抽水站",
         "filters": {}
       }
     },
-    "PUMPING_STATION": {}
+    "FLOODING": {
+      "WRA": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署淹水感測器",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署",
+            "Datastreams/name": "淹水深度"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=淹水感測器"
+          }
+        },
+        "datastream_filters": {
+          "name": "淹水深度"
+        }
+      },
+      "WRA2": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "水利署（與縣市政府合建）淹水感測器",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "水利署（與縣市政府合建）",
+            "Datastreams/name": "淹水深度"
+          },
+          "sub": {
+            "Datastreams/description": "Datastream_Category_type=淹水感測器"
+          }
+        },
+        "datastream_filters": {
+          "name": "淹水深度"
+        }
+      }
+    }
   },
   "WEATHER": {
     "GENERAL": {
