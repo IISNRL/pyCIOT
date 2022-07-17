@@ -108,8 +108,6 @@
       }
     },
     "GATE": {
-      // Gate contains 閘門開度、閘門絕對開度、閘門內水位、閘門外水位, all is mixed-up.
-      // TODO: Discuss about which one is going to be left in dataset.
       "WRA": {
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署閘門",
@@ -149,7 +147,6 @@
     },
     "PUMPING": {
       "WRA2": {
-        // 累計流量(tons)、表值(tons)、水位(m)
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
         "description": "水利署（與縣市政府合建）抽水站",
         "filters": {
@@ -162,7 +159,6 @@
         }
       },
       "TPE": {
-        // 總抽水狀態、內水位、外水位、抽水機數量、重力閘門
         "base_url": "https://sta.ci.taiwan.gov.tw/STA_Pump_Taipei/v1.0/",
         "description": "臺北市抽水站",
         "filters": {}

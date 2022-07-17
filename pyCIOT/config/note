@@ -1,0 +1,7 @@
+"GATE"
+// Gate contains 閘門開度、閘門絕對開度、閘門內水位、閘門外水位, all is mixed-up.
+// TODO: Discuss about which one is going to be left in dataset.
+
+"PUMPING"
+// WRA2 - 累計流量(tons)、表值(tons)、水位(m)
+// TPE - 總抽水狀態、內水位、外水位、抽水機數量、重力閘門
