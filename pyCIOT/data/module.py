@@ -16,11 +16,11 @@ class Module:
         for k, op in pairs.items():
             if k in json_filter:
                 for field, value in json_filter[k].items():
-                    if isinstance(value, Iterable):
+                    if isinstance(value, str):
+                        filter.set_filter(op(field, value))
+                    elif isinstance(value, Iterable):
                         for v in value:
                             filter.set_filter(op(field, v))
-                    else:
-                        filter.set_filter(op(field, value))
 
         return filter
 

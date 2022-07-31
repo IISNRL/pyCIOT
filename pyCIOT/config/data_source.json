@@ -47,7 +47,7 @@
           }
         },
         "datastream_filters": {
-          "name": "水位"
+          "eq": { "name": "水位" }
         }
       },
       "WRA_GROUNDWATER": {
@@ -75,7 +75,7 @@
           }
         },
         "datastream_filters": {
-          "name": "水位"
+          "eq": { "name": "水位" }
         }
       },
       "IA_POND": {
@@ -103,7 +103,7 @@
           }
         },
         "datastream_filters": {
-          "name": "水深"
+          "eq": { "name": "水深" }
         }
       }
     },
@@ -178,7 +178,7 @@
           }
         },
         "datastream_filters": {
-          "name": "淹水深度"
+          "eq": { "name": "淹水深度" }
         }
       },
       "WRA2": {
@@ -194,7 +194,7 @@
           }
         },
         "datastream_filters": {
-          "name": "淹水深度"
+          "eq": { "name": "淹水深度" }
         }
       }
     }
