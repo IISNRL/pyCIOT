@@ -5,7 +5,7 @@ import requests
 from .events import alert_types, notice_types
 
 
-class Disastor(Module):
+class Disaster(Module):
     """
     This module is totally different from others and it simply fetch json data from static site so that it only needs simple query here.
     There's no need for query builder or any filter cuz data is already formatted.

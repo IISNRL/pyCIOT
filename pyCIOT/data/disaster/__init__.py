@@ -1,3 +1,3 @@
-from .disaster import Disastor
+from .disaster import Disaster
 
-all = ["Disastor"]
+all = ["Disaster"]
