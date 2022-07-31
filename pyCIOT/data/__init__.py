@@ -22,10 +22,10 @@ Data Sources
 
 from .air import Air
 from .cctv import CCTV
+from .disaster import Disaster
 from .quake import Quake
+from .water import Water
 from .weather import Weather
 
-# import pyCIOT.data.water as water
-# import pyCIOT.data.disaster as disaster
 
 __all__ = [s for s in dir() if not s.startswith("_")]
