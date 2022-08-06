@@ -39,11 +39,17 @@ class Module:
         coord = list(filter(lambda x: x["location"]["type"] == "Point", locations))
         addr = list(filter(lambda x: x["location"]["type"] == "Address", locations))
 
-        return {
-            "latitude": coord[0]["location"]["coordinates"][1] if coord else None,
-            "longitude": coord[0]["location"]["coordinates"][0] if coord else None,
-            "address": addr[0]["location"]["address"] if addr else None,
-        }
+        if coord and "coordinates" in coord[0]["location"]:
+            longitude, latitude = coord[0]["location"]["coordinates"]
+        else:
+            longitude, latitude = None, None
+
+        if addr:
+            address = addr[0]["location"].get("address")
+        else:
+            address = None
+
+        return {"latitude": latitude, "longitude": longitude, "address": address}
 
     def parse_data(self, values: "list[Any]") -> "list[Any]":
         def parse(value):
