@@ -19,9 +19,16 @@ class Quake(Module):
             return {
                 "name": datastream["name"],
                 "description": datastream["description"],
-                "timestamp": datastream["Observations"][0]["phenomenonTime"],
-                # Flatten from result -> ref -> value to result -> value
-                "value": datastream["Observations"][0]["result"]["ref"],
+                "values": list(
+                    map(
+                        lambda x: {
+                            "timestamp": x["phenomenonTime"],
+                            # Flatten from result -> ref -> value to result -> value
+                            "value": x["result"]["ref"],
+                        },
+                        datastream["Observations"],
+                    )
+                ),
             }
 
         return list(map(parse, filter(lambda x: len(x["Observations"]), datastreams)))
