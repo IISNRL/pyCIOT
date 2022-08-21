@@ -10,7 +10,7 @@ class Quake(Module):
     def __init__(self):
         super().__init__("QUAKE")
 
-    def parseDatastrems(self, datastreams):
+    def parse_datastrems(self, datastreams):
         """
         Overwrite method with customized one
         """

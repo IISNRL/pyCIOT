@@ -24,7 +24,7 @@ class Module:
 
         return filter
 
-    def parseDatastrems(self, datastreams):
+    def parse_datastrems(self, datastreams):
         def parse(datastream):
             return {
                 "name": datastream["name"],
@@ -42,7 +42,7 @@ class Module:
 
         return list(map(parse, filter(lambda x: len(x["Observations"]), datastreams)))
 
-    def parseLocations(self, locations):
+    def parse_locations(self, locations):
         coord = list(filter(lambda x: x["location"]["type"] == "Point", locations))
         addr = list(filter(lambda x: x["location"]["type"] == "Address", locations))
 
@@ -64,8 +64,8 @@ class Module:
                 "name": value["name"],
                 "description": value["description"],
                 "properties": value["properties"],
-                "data": self.parseDatastrems(value["Datastreams"]),
-                "location": self.parseLocations(value["Locations"]),
+                "data": self.parse_datastrems(value["Datastreams"]),
+                "location": self.parse_locations(value["Locations"]),
             }
 
         return list(map(parse, values))
@@ -76,7 +76,7 @@ class Module:
                 "name": value["name"],
                 "description": value["description"],
                 "properties": value["properties"],
-                "location": self.parseLocations(value["Locations"]),
+                "location": self.parse_locations(value["Locations"]),
             }
 
         return list(map(parse, values))
