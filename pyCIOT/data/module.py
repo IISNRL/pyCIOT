@@ -29,8 +29,15 @@ class Module:
             return {
                 "name": datastream["name"],
                 "description": datastream["description"],
-                "timestamp": datastream["Observations"][0]["phenomenonTime"],
-                "value": datastream["Observations"][0]["result"],
+                "values": list(
+                    map(
+                        lambda x: {
+                            "timestamp": x["phenomenonTime"],
+                            "value": x["result"],
+                        },
+                        datastream["Observations"],
+                    )
+                ),
             }
 
         return list(map(parse, filter(lambda x: len(x["Observations"]), datastreams)))

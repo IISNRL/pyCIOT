@@ -71,6 +71,7 @@ class Air(Module):
         if "time_range" in kwargs:
             time_range = kwargs["time_range"]
             start, end = time_range.get("start"), time_range.get("end")
+            num_of_data = time_range.get("num_of_data", 1)
 
             if not (start and end):
                 raise Exception("Invalid time_range")
@@ -82,7 +83,7 @@ class Air(Module):
                         LE("phenomenonTime", end),
                     ]
                 )
-            )
+            ).set_pagination(Pagination(end=1 + num_of_data))
 
         _filter = self.filter_parser(source["filters"])
         if "stationIds" in kwargs:
