@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyCIOT",
-    version="0.6.0",
+    version="0.7.0",
     author="cclljj",
     author_email="cclljj@iis.sinica.edu.tw",
     description="Simple python module for retrieving data from Civil IOT Taiwan Data Service Platform",
