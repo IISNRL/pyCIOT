@@ -1,6 +1,7 @@
 from ..module import Module
 from ..utils.crawler import Crawler
 from ..utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
+from ..utils.op import EQ, GE, LE, GEODISTANCE
 
 from typing import Any
 
@@ -20,18 +21,9 @@ class CCTV(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(self, src: str) -> "list[Any]":
+    def get_data(self, src: str, **kwargs) -> "list[Any]":
         """
         Get image data of CCTV
-
-        Parameters
-        ----------
-        src:
-            Project src from `get_source`
-
-        Returns
-        ---------
-
         """
         try:
             typ, org = src.split(":")
@@ -51,7 +43,34 @@ class CCTV(Module):
             ]
         )
 
+        if "time_range" in kwargs:
+            time_range = kwargs["time_range"]
+            start, end = time_range.get("start"), time_range.get("end")
+            num_of_data = time_range.get("num_of_data", 1)
+
+            if not (start and end):
+                raise Exception("Invalid time_range")
+
+            expands.get_expand("Datastreams/Observations").set_filter(
+                Filter(
+                    [
+                        GE("phenomenonTime", start),
+                        LE("phenomenonTime", end),
+                    ]
+                )
+            ).set_pagination(Pagination(end=1 + num_of_data))
+
         filter = self.filter_parser(source["filters"])
+        if "location" in kwargs:
+            location = kwargs["location"]
+            latitude, longitude, distance = (
+                location["latitude"],
+                location["longitude"],
+                location["distance"],
+            )
+
+            filter.set_filter(GEODISTANCE(latitude, longitude, distance))
+
         url = UrlBuilder(
             source["base_url"],
             expands=expands,

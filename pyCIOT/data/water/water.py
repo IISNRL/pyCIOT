@@ -1,7 +1,7 @@
 from ..module import Module
 from ..utils.crawler import Crawler
 from ..utils.url import UrlBuilder, Select, OrderBy, Pagination, Filter, Expand, Expands
-from ..utils.op import EQ, LE
+from ..utils.op import EQ, GE, LE, GEODISTANCE
 
 from typing import Any
 
@@ -11,6 +11,9 @@ class Water(Module):
         super().__init__("WATER")
 
     def get_source(self, typ: str = None, **kwargs) -> "list[str]":
+        """
+        Get available sources of WATER sensing data.
+        """
         if typ and typ in self._sources:
             return [f"{typ}:{name}" for name in self._sources[typ]]
         else:
@@ -18,7 +21,10 @@ class Water(Module):
                 f"{typ}:{name}" for typ in self._sources for name in self._sources[typ]
             ]
 
-    def get_data(self, src: str, stationID: str = None) -> "list[Any]":
+    def get_data(self, src: str, **kwargs) -> "list[Any]":
+        """
+        Get sensing value of WATER.
+        """
         try:
             typ, org = src.split(":")
             source = self._sources[typ][org]
@@ -42,9 +48,36 @@ class Water(Module):
             ]
         )
 
+        if "time_range" in kwargs:
+            time_range = kwargs["time_range"]
+            start, end = time_range.get("start"), time_range.get("end")
+            num_of_data = time_range.get("num_of_data", 1)
+
+            if not (start and end):
+                raise Exception("Invalid time_range")
+
+            expands.get_expand("Datastreams/Observations").set_filter(
+                Filter(
+                    [
+                        GE("phenomenonTime", start),
+                        LE("phenomenonTime", end),
+                    ]
+                )
+            ).set_pagination(Pagination(end=1 + num_of_data))
+
         filter = self.filter_parser(source["filters"])
-        if stationID:
-            filter.set_filter(EQ("properties/stationID", stationID))
+        if "stationID" in kwargs:
+            filter.set_filter(EQ("properties/stationID", kwargs["stationID"]))
+
+        if "location" in kwargs:
+            location = kwargs["location"]
+            latitude, longitude, distance = (
+                location["latitude"],
+                location["longitude"],
+                location["distance"],
+            )
+
+            filter.set_filter(GEODISTANCE(latitude, longitude, distance))
 
         url = UrlBuilder(
             source["base_url"],
@@ -57,16 +90,7 @@ class Water(Module):
 
     def get_station(self, src: str, stationID: str = None) -> "list[Any]":
         """
-        Get locations of sensing devices
-
-        Parameters
-        ----------
-        src:
-            Project src from `get_source`
-
-        Returns
-        ----------
-
+        Get info of WATER sensing station.
         """
         try:
             typ, org = src.split(":")

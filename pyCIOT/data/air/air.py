@@ -10,7 +10,7 @@ class Air(Module):
     def __init__(self, **kwargs):
         super().__init__("AIR")
 
-    def get_source(self, typ: str = "OBSERVATION", **kwargs) -> "list[str]":
+    def get_source(self, typ: str = "OBS", **kwargs) -> "list[str]":
         """
         Get available sources of AIR sensing data.
         """
@@ -22,6 +22,9 @@ class Air(Module):
             ]
 
     def get_data(self, src: str, **kwargs) -> "list[Any]":
+        """
+        Get sensing value of AIR.
+        """
         try:
             typ, org = src.split(":")
             source = self._sources[typ][org]
@@ -68,8 +71,6 @@ class Air(Module):
                 location["longitude"],
                 location["distance"],
             )
-            if latitude is None or longitude is None or distance is None:
-                raise Exception("Invalid location")
 
             filter.set_filter(GEODISTANCE(latitude, longitude, distance))
 
@@ -83,6 +84,9 @@ class Air(Module):
         return self.parse_data(res)
 
     def get_station(self, src: str, stationID: str = None) -> "list[Any]":
+        """
+        Get info of AIR sensing station.
+        """
         try:
             typ, org = src.split(":")
             source = self._sources[typ][org]
