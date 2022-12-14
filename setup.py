@@ -17,7 +17,7 @@ setuptools.setup(
     data_files=glob.glob("pyCIOT/config/**"),
     url="https://github.com/IISNRL/pyCIOT",
     project_urls={
-        # "Documentation": "",
+        "Documentation": "https://learnciot.github.io/",
         "Source": "https://github.com/IISNRL/pyCIOT",
         "Bug Tracker": "https://github.com/IISNRL/pyCIOT/issues",
     },
@@ -28,7 +28,6 @@ setuptools.setup(
     ],
     python_requires=">=3.6",
     py_modules=["pyCIOT"],
-    # package_dir={"pyCIOT": "pyCIOT"},
     install_requires=["requests==2.28.0", "xmltodict==0.13.0"],
     tests_require=["pytest"],
 )
