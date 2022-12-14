@@ -197,6 +197,17 @@
           "eq": { "name": "淹水深度" }
         }
       }
+    },
+    "POLLUTION": {
+      "CPAMI": {
+        "base_url": "https://sta.ci.taiwan.gov.tw/STA_WaterResource_v2/v1.0/",
+        "description": "營建署污水感測器",
+        "filters": {
+          "eq": {
+            "properties/authority_type": "營建署"
+          }
+        }
+      }
     }
   },
   "WEATHER": {
