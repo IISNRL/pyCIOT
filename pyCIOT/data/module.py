@@ -1,8 +1,9 @@
 from .config import DATA_SOURCE
 from .utils.op import EQ, GE, GT, LE, LT, SUBSTRING
-from .utils.url import Filter
+from .utils.url import Expands, Filter, Pagination
 
 from collections.abc import Iterable
+from datetime import datetime, timedelta
 from typing import Any
 
 
@@ -80,3 +81,24 @@ class Module:
             }
 
         return list(map(parse, values))
+
+    def parse_time_range(self, time_range, expands: "Expands"):
+        s, e = time_range.get("start"), time_range.get("end")
+        num_of_data = time_range.get("num_of_data", 1)
+
+        if not (s and e):
+            raise Exception("Invalid time_range")
+
+        d1 = s if isinstance(s, datetime) else datetime.fromisoformat(s[:-1])
+        d2 = e if isinstance(e, datetime) else datetime.fromisoformat(e[:-1])
+        if d1 + timedelta(days=30) < d2:
+            raise Exception("time_range cannot span over a month")
+
+        expands.get_expand("Datastreams/Observations").set_filter(
+            Filter(
+                [
+                    GE("phenomenonTime", s),
+                    LE("phenomenonTime", e),
+                ]
+            )
+        ).set_pagination(Pagination(end=1 + num_of_data))

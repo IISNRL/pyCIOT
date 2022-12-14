@@ -49,21 +49,7 @@ class Weather(Module):
         )
 
         if "time_range" in kwargs:
-            time_range = kwargs["time_range"]
-            start, end = time_range.get("start"), time_range.get("end")
-            num_of_data = time_range.get("num_of_data", 1)
-
-            if not (start and end):
-                raise Exception("Invalid time_range")
-
-            expands.get_expand("Datastreams/Observations").set_filter(
-                Filter(
-                    [
-                        GE("phenomenonTime", start),
-                        LE("phenomenonTime", end),
-                    ]
-                )
-            ).set_pagination(Pagination(end=1 + num_of_data))
+            self.parse_time_range(kwargs["time_range"], expands)
 
         filter = self.filter_parser(source["filters"])
         if "stationID" in kwargs:
